@@ -662,3 +662,116 @@ textarea {
     font-size: 2.8rem;
   }
 }
+/* ========================================
+   ANIMATIONS AU SCROLL (fade-in)
+======================================== */
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  },
+  { threshold: 0.2 }
+);
+
+document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
+
+/* ========================================
+   PARALLAX EFFECT
+======================================== */
+const parallaxEls = document.querySelectorAll(".parallax");
+
+window.addEventListener("scroll", () => {
+  let scrollY = window.scrollY;
+
+  parallaxEls.forEach((el) => {
+    const speed = 0.3;
+    el.style.transform = `translateY(${scrollY * speed}px)`;
+  });
+});
+
+/* ========================================
+   FORMULAIRE MULTI-ÉTAPES
+======================================== */
+const steps = document.querySelectorAll(".form-step");
+const nextBtns = document.querySelectorAll(".next-btn");
+const prevBtns = document.querySelectorAll(".prev-btn");
+
+let currentStep = 0;
+
+function showStep(i) {
+  steps.forEach((s, index) => {
+    s.classList.remove("active");
+    if (index === i) s.classList.add("active");
+  });
+}
+
+showStep(currentStep);
+
+nextBtns.forEach((btn) =>
+  btn.addEventListener("click", () => {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      showStep(currentStep);
+      window.scrollTo({ top: document.querySelector("#formulaire").offsetTop - 80, behavior: "smooth" });
+    }
+  })
+);
+
+prevBtns.forEach((btn) =>
+  btn.addEventListener("click", () => {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+      window.scrollTo({ top: document.querySelector("#formulaire").offsetTop - 80, behavior: "smooth" });
+    }
+  })
+);
+
+/* ========================================
+   NAVIGATION : SMOOTH SCROLL (Apple-like)
+======================================== */
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener("click", function (e) {
+    const href = this.getAttribute("href");
+    if (href === "#") return;
+
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    e.preventDefault();
+
+    window.scrollTo({
+      top: target.offsetTop - 80,
+      behavior: "smooth",
+    });
+  });
+});
+
+/* ========================================
+   HOVER EFFET PREMIUM SUR LES CARTES
+======================================== */
+const cards = document.querySelectorAll(".mag-card");
+
+cards.forEach((card) => {
+  card.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    card.style.transform = `translate(${x * 0.03}px, ${y * 0.03}px)`;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "translate(0, 0)";
+  });
+});
+
+/* ========================================
+   ICONES (Feather)
+======================================== */
+if (window.feather) {
+  window.feather.replace();
+}
